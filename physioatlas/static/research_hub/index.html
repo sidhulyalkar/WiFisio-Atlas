@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PhysioAtlas Research Hub</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#071015; --panel:#0d1b22; --panel2:#12252e; --line:#284650;
+      --text:#eaf7f5; --muted:#8fb7b4; --good:#55d6a0; --warn:#ffd166;
+      --bad:#ff7b7b; --accent:#7cc9ff; --violet:#b7a1ff;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 10% 0%,#102731 0,transparent 35%),var(--bg); color:var(--text); }
+    header { position:sticky; top:0; z-index:5; backdrop-filter:blur(14px); background:#071015dd; border-bottom:1px solid var(--line); }
+    .header-inner { max-width:1440px; margin:auto; padding:18px 28px; display:flex; justify-content:space-between; gap:24px; align-items:center; }
+    h1 { margin:0; font-size:1.35rem; letter-spacing:.02em; }
+    .subtitle { color:var(--muted); font-size:.82rem; margin-top:4px; }
+    .status { display:flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--line); border-radius:999px; background:var(--panel); }
+    .dot { width:9px; height:9px; border-radius:50%; background:var(--warn); box-shadow:0 0 16px currentColor; }
+    main { max-width:1440px; margin:auto; padding:24px 28px 56px; }
+    .guardrail { border:1px solid #735f2c; background:#33280eaa; color:#ffe5a0; padding:12px 16px; border-radius:12px; margin-bottom:20px; }
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+    button { color:var(--text); background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:9px 13px; cursor:pointer; }
+    button:hover,button.active { border-color:var(--accent); background:#123044; }
+    button.action { background:#15332b; border-color:#2c755d; }
+    .view { display:none; } .view.active { display:block; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+    .wide-grid { display:grid; grid-template-columns:minmax(0,2fr) minmax(300px,1fr); gap:14px; }
+    .card { background:linear-gradient(145deg,var(--panel),#0b171d); border:1px solid var(--line); border-radius:15px; padding:16px; min-width:0; }
+    .card h2,.card h3 { margin:0 0 10px; }
+    .label { color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.09em; }
+    .value { font-size:1.35rem; margin-top:5px; }
+    .metric-row { display:grid; grid-template-columns:1fr auto; gap:10px; padding:8px 0; border-bottom:1px solid #1e353e; }
+    .metric-row:last-child { border:0; }
+    .badge { display:inline-flex; padding:4px 8px; border-radius:999px; font-size:.72rem; border:1px solid var(--line); color:var(--muted); }
+    .badge.good { color:var(--good); border-color:#2b7659; } .badge.warn { color:var(--warn); border-color:#7b662d; } .badge.bad { color:var(--bad); border-color:#7e3434; }
+    .bar { height:8px; border-radius:999px; background:#182e37; overflow:hidden; margin-top:8px; }
+    .bar > span { display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--good)); }
+    .person { position:relative; overflow:hidden; }
+    .person::after { content:""; position:absolute; width:120px; height:120px; right:-50px; top:-50px; border-radius:50%; background:#7cc9ff10; }
+    .person-title { display:flex; align-items:center; gap:10px; }
+    .avatar { width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:#193947; color:var(--accent); font-weight:700; }
+    .vitals { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+    .vital { background:#0a151a; border:1px solid #1e353e; border-radius:10px; padding:9px; }
+    .vital strong { display:block; margin-top:4px; font-size:1.03rem; }
+    table { width:100%; border-collapse:collapse; font-size:.82rem; }
+    th,td { text-align:left; padding:9px; border-bottom:1px solid #1e353e; vertical-align:top; }
+    th { color:var(--muted); font-weight:500; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:.75rem; color:#b5cfcc; }
+    .toolbar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .empty { color:var(--muted); padding:24px; text-align:center; border:1px dashed var(--line); border-radius:12px; }
+    canvas { width:100%; height:220px; background:#081419; border-radius:12px; border:1px solid #1e353e; }
+    @media(max-width:900px){ .wide-grid{grid-template-columns:1fr}.header-inner{align-items:flex-start}.vitals{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<header><div class="header-inner"><div><h1>π PhysioAtlas Research Hub</h1><div class="subtitle">Consent-first ambient physiology, calibration, and experiment observatory</div></div><div class="status"><span class="dot" id="status-dot"></span><span id="status-text">Connecting</span></div></div></header>
+<main>
+  <div class="guardrail">Research-only. Identity is limited to explicitly enrolled household members. Ambiguous people remain anonymous. No medical diagnosis or direct organ imaging is implied.</div>
+  <nav class="tabs">
+    <button class="active" data-view="live">Live room</button>
+    <button data-view="people">People & baselines</button>
+    <button data-view="calibration">Calibration</button>
+    <button data-view="studies">Studies</button>
+    <button data-view="experiments">Experiments</button>
+    <button data-view="privacy">Privacy & provenance</button>
+  </nav>
+
+  <section id="live" class="view active">
+    <div class="toolbar">
+      <button class="action" data-action="start_recording">Start recording</button>
+      <button data-action="stop_recording">Stop recording</button>
+      <button data-action="run_calibration">Run calibration</button>
+      <button data-action="run_priority_studies">Run study suite</button>
+    </div>
+    <div class="grid" id="summary-cards"></div>
+    <div class="wide-grid" style="margin-top:14px">
+      <div class="card"><h2>Active tracks</h2><div id="tracks"></div></div>
+      <div class="card"><h2>Modality health</h2><div id="modalities"></div></div>
+    </div>
+  </section>
+
+  <section id="people" class="view"><div class="card" style="margin-bottom:14px"><h2>Biological baseline comparison</h2><div id="distinctiveness"></div></div><div class="grid" id="members"></div></section>
+  <section id="calibration" class="view"><div class="card"><h2>Per-person modality calibration</h2><div id="calibration-table"></div></div></section>
+  <section id="studies" class="view"><div class="grid" id="studies-grid"></div></section>
+  <section id="experiments" class="view"><div class="card"><h2>Experiment ledger</h2><div id="experiments-table"></div></div></section>
+  <section id="privacy" class="view">
+    <div class="wide-grid"><div class="card"><h2>Privacy boundary</h2><div id="privacy-card"></div></div><div class="card"><h2>Recent events</h2><div id="events"></div></div></div>
+    <div class="card" style="margin-top:14px"><h2>Raw state</h2><pre id="raw"></pre></div>
+  </section>
+</main>
+<script>
+const fmt=(v,d=1)=>Number.isFinite(Number(v))?Number(v).toFixed(d):'not observable';
+const esc=(v)=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const badge=(text,kind='')=>`<span class="badge ${kind}">${esc(text)}</span>`;
+function sparkline(values,label){const v=values.filter(Number.isFinite);if(v.length<2)return `<div class="label">${label}: collecting</div>`;const lo=Math.min(...v),hi=Math.max(...v),span=Math.max(hi-lo,1e-6);const pts=v.slice(-80).map((x,i,a)=>`${(i/Math.max(a.length-1,1))*100},${30-((x-lo)/span)*26}`).join(' ');return `<div class="label">${label} ${fmt(v[v.length-1],1)}</div><svg viewBox="0 0 100 34" width="100%" height="42" preserveAspectRatio="none"><polyline fill="none" stroke="#7cc9ff" stroke-width="1.8" points="${pts}"/></svg>`;}
+function calibrationKind(v){ return v>=.75?'good':v>=.45?'warn':'bad'; }
+function vital(label,value,unit){return `<div class="vital"><span class="label">${label}</span><strong>${value} ${unit}</strong></div>`}
+function personCard(item,series=[]){
+ const alias=item.display_alias||item.member_id||item.track_id||'Anonymous';
+ const known=Boolean(item.member_id); const conf=item.identity_confidence??1;
+ const heart=series.map(x=>Number(x.heart_rate_bpm)).filter(Number.isFinite); const resp=series.map(x=>Number(x.respiratory_rate_bpm)).filter(Number.isFinite);
+ return `<article class="card person"><div class="person-title"><div class="avatar">${esc(alias).slice(0,2).toUpperCase()}</div><div><h3>${esc(alias)}</h3>${badge(known?'enrolled match':'anonymous track',known?'good':'warn')} ${known?badge(`identity ${fmt(conf*100,0)}%`):''}</div></div><div class="vitals">${vital('Respiration',fmt(item.respiratory_rate_bpm,1),'bpm')}${vital('Heart',fmt(item.heart_rate_bpm,1),'bpm')}${vital('Observability',fmt((item.observability??0)*100,0),'%')}</div><div style="margin-top:12px">${sparkline(resp,'Respiratory trend')}${sparkline(heart,'Heart trend')}</div><div class="metric-row"><span>Signal quality</span><span>${fmt((item.signal_quality??0)*100,0)}%</span></div><div class="metric-row"><span>Motion index</span><span>${fmt(item.motion_index,3)}</span></div>${item.identity_reason?`<div class="metric-row"><span>Identity gate</span><span>${esc(item.identity_reason)}</span></div>`:''}</article>`;
+}
+function table(headers,rows){if(!rows.length)return '<div class="empty">No records yet</div>';return `<table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`}
+async function action(name){const r=await fetch('/api/actions',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:name})});const p=await r.json(); if(!r.ok) alert(p.error||'Action failed');}
+document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click',()=>action(b.dataset.action)));
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===b.dataset.view));}));
+function render(state){
+ const status=state.status||'unknown'; document.getElementById('status-text').textContent=status; document.getElementById('status-dot').style.background=status.includes('live')?'var(--good)':status.includes('error')?'var(--bad)':'var(--warn)';
+ const hh=state.household||{}; const tracks=hh.tracks||[]; const known=tracks.filter(x=>x.member_id).length;
+ document.getElementById('summary-cards').innerHTML=[['Active tracks',tracks.length],['Enrolled matches',known],['Anonymous tracks',tracks.length-known],['Session',state.session_id||'none']].map(([l,v])=>`<div class="card"><div class="label">${l}</div><div class="value">${esc(v)}</div></div>`).join('');
+ const series=hh.track_series||{}; document.getElementById('tracks').innerHTML=tracks.length?`<div class="grid">${tracks.map(x=>personCard(x,series[x.track_id]||[])).join('')}</div>`:'<div class="empty">No active observations</div>';
+ const mods=state.modalities||{}; document.getElementById('modalities').innerHTML=Object.entries(mods).map(([k,v])=>`<div class="metric-row"><span>${esc(k)}</span><span>${badge(v.status||'unknown',v.status==='ready'||v.status==='live'?'good':v.status==='error'?'bad':'warn')} ${v.quality!=null?fmt(v.quality*100,0)+'%':''}</span></div>`).join('')||'<div class="empty">No modality reports</div>';
+ const members=hh.members||[]; document.getElementById('members').innerHTML=members.map(m=>{const b=m.baseline||{};return `<article class="card person"><div class="person-title"><div class="avatar">${esc(m.display_alias||m.member_id).slice(0,2).toUpperCase()}</div><div><h3>${esc(m.display_alias||m.member_id)}</h3>${badge('consented enrollment','good')}</div></div><div class="vitals">${vital('Baseline respiration',fmt(b.respiratory_rate_bpm,1),'bpm')}${vital('Baseline heart',fmt(b.heart_rate_bpm,1),'bpm')}${vital('Sessions',fmt(b.sessions,0),'')}</div></article>`}).join('')||'<div class="empty">No enrolled members</div>';
+ const distinct=hh.biological_distinctiveness||{}; document.getElementById('distinctiveness').innerHTML=distinct.available?table(['Pair','Resp Δ','Heart Δ','Normalized distance'],(distinct.pairs||[]).map(p=>`<tr><td>${esc(p.member_a)} ↔ ${esc(p.member_b)}</td><td>${fmt(p.respiratory_rate_difference_bpm,1)} bpm</td><td>${fmt(p.heart_rate_difference_bpm,1)} bpm</td><td>${fmt(p.normalized_baseline_distance,2)}</td></tr>`))+'<div class="guardrail" style="margin:12px 0 0">Biological differences are descriptive baselines, not sole identity evidence.</div>':'<div class="empty">Complete baselines are not yet available.</div>';
+ const cal=state.calibration||{}; const calRows=[]; Object.entries(cal).forEach(([id,v])=>{Object.entries(v.modalities||{}).forEach(([m,p])=>calRows.push(`<tr><td>${esc(v.display_alias||id)}</td><td>${esc(m)}</td><td>${p.samples}</td><td>${badge(fmt(p.calibration_score*100,0)+'%',calibrationKind(p.calibration_score))}<div class="bar"><span style="width:${p.calibration_score*100}%"></span></div></td><td>${esc(p.status)}</td></tr>`)); if(v.physiology_calibration_score!=null)calRows.push(`<tr><td>${esc(v.display_alias||id)}</td><td>physiology baseline</td><td>${v.biology?.sessions??0}</td><td>${badge(fmt(v.physiology_calibration_score*100,0)+'%',calibrationKind(v.physiology_calibration_score))}<div class="bar"><span style="width:${v.physiology_calibration_score*100}%"></span></div></td><td>${esc(v.physiology_status||'unknown')}</td></tr>`);}); document.getElementById('calibration-table').innerHTML=table(['Person','Modality','Sessions','Score','Status'],calRows);
+ const studies=state.studies||[]; document.getElementById('studies-grid').innerHTML=studies.map(s=>`<article class="card"><div class="label">${esc(s.target||s.study_id)}</div><h3>${esc(s.study_id||'Study')}</h3><div class="metric-row"><span>Sessions</span><span>${s.sessions_analyzed??0}</span></div><div class="metric-row"><span>Valid</span><span>${badge(s.valid?'yes':'no',s.valid?'good':'warn')}</span></div><div class="metric-row"><span>Boundary</span><span>${esc(s.catalog?.claim_boundary||'research only')}</span></div></article>`).join('')||'<div class="empty">No study reports published</div>';
+ const ex=state.experiments||[]; document.getElementById('experiments-table').innerHTML=table(['Experiment','Status','Dataset','Updated'],ex.map(e=>`<tr><td>${esc(e.experiment_id||e.run_id||'unknown')}</td><td>${badge(e.status||'unknown',e.status==='passed'?'good':'warn')}</td><td>${esc(e.dataset_sha256||'')}</td><td>${esc(e.updated_at_utc||'')}</td></tr>`));
+ const privacy=state.privacy||{}; document.getElementById('privacy-card').innerHTML=Object.entries(privacy).map(([k,v])=>`<div class="metric-row"><span>${esc(k)}</span><span>${esc(v)}</span></div>`).join('');
+ const events=(state.events||[]).slice(-12).reverse(); document.getElementById('events').innerHTML=events.map(e=>`<div class="metric-row"><span>${esc(e.type)}</span><span>${esc(e.timestamp_utc)}</span></div>`).join('')||'<div class="empty">No events</div>';
+ document.getElementById('raw').textContent=JSON.stringify(state,null,2);
+}
+async function refresh(){try{const r=await fetch('/api/hub',{cache:'no-store'});if(!r.ok)throw new Error(r.status);render(await r.json());}catch(e){document.getElementById('status-text').textContent='disconnected';document.getElementById('status-dot').style.background='var(--bad)';}}
+refresh(); setInterval(refresh,1000);
+</script>
+</body>
+</html>

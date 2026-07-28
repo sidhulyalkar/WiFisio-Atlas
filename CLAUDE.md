@@ -1,5 +1,17 @@
 # Claude Code Configuration — WiFi-DensePose + Claude Flow V3
 
+# PhysioAtlas v0.3 agent rules
+
+PhysioAtlas lives in `physioatlas/` and is a research-only extension. Before
+editing it, run `make physioatlas-ci`. Preserve strict session schemas,
+subject/domain-disjoint splits, required null controls, checkpoint hashes,
+consent validation, uncertainty/abstention outputs, and explicit claim
+boundaries. Never weaken a validator to make a run pass. Synthetic results are
+software verification, not biological or clinical evidence. Hardware support
+must be backed by an adapter, raw timing/quality provenance, and a physical
+integration test. See `docs/physioatlas/README.md` and `INNERLOOP.md`.
+
+
 ## Project: wifi-densepose
 
 WiFi-based human pose estimation using Channel State Information (CSI).
@@ -425,3 +437,13 @@ npx @claude-flow/cli@latest doctor --fix
 
 - Documentation: https://github.com/ruvnet/claude-flow
 - Issues: https://github.com/ruvnet/claude-flow/issues
+
+## PhysioAtlas research extension
+
+When working on `physioatlas/`, read `INNERLOOP.md`,
+`PROJECT_GOALS_PHYSIOATLAS.md`, and `docs/physioatlas/CLAIM_BOUNDARIES.md` first.
+Treat measured, derived, predicted, and hypothesized signals as distinct types.
+Run `make test-physioatlas` after changes. Every scientific experiment must use
+subject-disjoint evaluation, report the included baselines/nulls, and preserve
+`research_only: true` unless independent validation and governance explicitly
+justify otherwise.

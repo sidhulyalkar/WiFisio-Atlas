@@ -1,0 +1,31 @@
+schema_version: physioatlas.config.v2
+name: synthetic-ecg-rf-only-ablation
+hypothesis: >-
+  RF measurements alone retain generated cardiac periodicity after removing
+  pose, non-target physiology, and geometry context.
+claim_boundary: Synthetic software ablation only.
+research_only: true
+output: ../../outputs/physioatlas/synthetic_ecg_rf_only
+data:
+  root: ../../data/physioatlas/synthetic
+  target: ecg
+  sample_rate_hz: 20.0
+  window_seconds: 8.0
+  stride_seconds: 4.0
+  max_gap_s: 0.25
+  require_consent: true
+split:
+  strategy: subject
+  validation_fraction: 0.25
+training:
+  epochs: 3
+  batch_size: 8
+  learning_rate: 0.001
+  hidden_dim: 48
+  layers: 1
+  seed: 42
+  device: auto
+  use_auxiliary: false
+  use_geometry: false
+  architecture: complex_link
+  causal: false

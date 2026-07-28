@@ -3,7 +3,7 @@
 
 .PHONY: verify verify-verbose verify-audit install install-verify install-python \
         install-rust install-browser install-docker install-field install-full \
-        check build-rust build-wasm test-rust bench run-api run-viz clean help
+        check build-rust build-wasm test-rust test-physioatlas physioatlas-doctor physioatlas-smoke physioatlas-household-smoke physioatlas-household-fault physioatlas-fault physioatlas-ci physioatlas-demo physioatlas-pretrain physioatlas-domain-test bench run-api run-viz clean help
 
 # ─── Installation ────────────────────────────────────────────
 # Guided interactive installer
@@ -48,6 +48,43 @@ verify-verbose:
 # Full audit -- verify pipeline + scan codebase for mock/random patterns
 verify-audit:
 	@./verify --verbose --audit
+
+
+# ─── PhysioAtlas research extension ─────────────────────────
+test-physioatlas:
+	@python -m pytest -o addopts='' tests/physioatlas -q
+
+physioatlas-doctor:
+	@python -m compileall -q physioatlas
+	@python -m physioatlas list-adapters > /dev/null
+	@python -m physioatlas doctor --repo .
+
+physioatlas-smoke:
+	@python -m physioatlas smoke-test --output outputs/physioatlas/innerloop-smoke
+	@python -m physioatlas verify-run outputs/physioatlas/innerloop-smoke/run
+
+physioatlas-fault:
+	@python -m physioatlas fault-test --output outputs/physioatlas/fault-test
+
+physioatlas-household-smoke:
+	@python -m physioatlas household-smoke-test --output outputs/physioatlas/household-smoke
+
+physioatlas-household-fault:
+	@python -m physioatlas household-fault-test --output outputs/physioatlas/household-fault
+
+physioatlas-ci: physioatlas-doctor test-physioatlas physioatlas-smoke physioatlas-household-smoke physioatlas-household-fault physioatlas-fault
+
+
+physioatlas-pretrain:
+	@python -m physioatlas pretrain-rf --data data/physioatlas/synthetic --output outputs/physioatlas/rf-pretraining --epochs 2 --device cpu
+
+physioatlas-domain-test:
+	@python -m physioatlas run-config configs/physioatlas/synthetic_environment_holdout.yaml
+
+physioatlas-demo:
+	@python -m physioatlas synthesize --output data/physioatlas/synthetic --subjects 4
+	@python -m physioatlas validate --data data/physioatlas/synthetic
+	@python -m physioatlas run-config configs/physioatlas/synthetic_ecg.yaml
 
 # ─── Rust Builds ─────────────────────────────────────────────
 build-rust:
@@ -110,6 +147,10 @@ help:
 	@echo "    make build-wasm-mat   Build WASM with WiFi-Mat (field)"
 	@echo "    make test-rust        Run all Rust tests"
 	@echo "    make bench            Run signal processing benchmarks"
+	@echo "    make test-physioatlas Run PhysioAtlas Python tests"
+	@echo "    make physioatlas-demo Run synthetic end-to-end research demo"
+	@echo "    make physioatlas-pretrain Run masked RF pretraining"
+	@echo "    make physioatlas-domain-test Run environment-held-out experiment"
 	@echo ""
 	@echo "  Run:"
 	@echo "    make run-api          Start Python API server"

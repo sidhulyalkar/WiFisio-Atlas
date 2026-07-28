@@ -1,0 +1,16 @@
+name: physioatlas-household-research
+version: 1
+research_only: true
+entry_task: INNERLOOP_GEMINI_RESEARCH_HUB_TASK.md
+commands:
+  doctor: python -m physioatlas doctor --repo .
+  tests: python -m pytest -o addopts='' tests/physioatlas -q
+  household_smoke: python -m physioatlas household-smoke-test --output outputs/physioatlas/household-smoke
+  serve_hub: python -m physioatlas serve-research-hub --state outputs/physioatlas/household-smoke/research-hub-state.json --port 8770
+acceptance:
+  - all unit and contract tests pass
+  - household smoke report status is passed
+  - all enrolled synthetic members are trackable
+  - synthetic unknown visitor remains anonymous
+  - all five priority study reports exist
+  - UI exposes calibration and research claim boundaries

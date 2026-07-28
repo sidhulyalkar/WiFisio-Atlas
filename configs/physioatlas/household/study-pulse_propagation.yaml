@@ -1,0 +1,11 @@
+schema_version: physioatlas.study-protocol.v1
+study_id: household-pulse_propagation-pilot
+target: pulse_propagation
+dataset_root: data/physioatlas/household/sessions
+output_dir: outputs/physioatlas/studies/pulse_propagation
+sample_rate_hz: 50.0
+minimum_sessions: 4
+require_reference: true
+environment_holdout: true
+research_only: true
+notes: Replace the dataset path after collecting synchronized, consented sessions.
