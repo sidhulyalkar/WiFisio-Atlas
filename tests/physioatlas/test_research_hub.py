@@ -21,6 +21,14 @@ def test_research_hub_endpoints_and_safe_actions(tmp_path: Path):
         with urllib.request.urlopen(f"http://{host}:{port}/api/hub") as response:
             state = json.load(response)
         assert state["status"] == "live_test"
+        assert state["rf_fusion"]["status"] == "waiting"
+        assert state["reflector"]["status"] == "not_configured"
+        with urllib.request.urlopen(f"http://{host}:{port}/api/reflector") as response:
+            reflector = json.load(response)
+        assert reflector["safety_state"] == "safe_hold"
+        with urllib.request.urlopen(f"http://{host}:{port}/api/rf-fusion") as response:
+            fusion = json.load(response)
+        assert fusion["last_decision"] is None
 
         request = urllib.request.Request(
             f"http://{host}:{port}/api/actions",

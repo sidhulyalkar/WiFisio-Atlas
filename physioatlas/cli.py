@@ -36,6 +36,7 @@ from .rf_field import (
     reconstruct_cir,
     select_active_measurement,
 )
+from .rf_cli import add_rf_research_parsers, handle_rf_research_command
 from .schema import Modality, RFRepresentation
 from .synthetic import create_synthetic_cohort
 from .training import TrainConfig, train_model
@@ -378,12 +379,17 @@ def build_parser() -> argparse.ArgumentParser:
     hub_worker.add_argument("--data")
     hub_worker.add_argument("--registry")
     hub_worker.add_argument("--output", default="outputs/physioatlas/research-hub-actions")
+    add_rf_research_parsers(subparsers)
     return parser
 
 
 def main(argv: Optional[list[str]] = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        rf_result = handle_rf_research_command(args)
+        if rf_result is not None:
+            _emit(rf_result)
+            return 0
         if args.command == "init-household-research":
             _emit(initialize_household_workspace(
                 args.output, household_id=args.household_id, members=args.member

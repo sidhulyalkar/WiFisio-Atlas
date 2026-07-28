@@ -9,6 +9,8 @@ Read these files before changing code:
 - `PROJECT_GOALS_PHYSIOATLAS.md`
 - `docs/physioatlas/WIFISIO_ATLAS_PRODUCT_BLUEPRINT.md`
 - `docs/physioatlas/DUAL_BAND_HOUSEHOLD_CSI_PLAN.md`
+- `docs/physioatlas/CSI_BFI_FUSION_STUDY.md`
+- `docs/physioatlas/REFLECTOR_FUSION_FRONTEND_SPEC.md`
 - `docs/physioatlas/CLAIM_BOUNDARIES.md`
 - `docs/physioatlas/RESEARCH_HUB.md`
 - `docs/physioatlas/HOUSEHOLD_RESEARCH.md`
@@ -16,6 +18,9 @@ Read these files before changing code:
 - `physioatlas/household_live.py`
 - `physioatlas/household_csi.py`
 - `physioatlas/household_csi_schema.py`
+- `physioatlas/household_bfi_schema.py`
+- `physioatlas/rf_fusion_schema.py`
+- `physioatlas/calibration_reflector_schema.py`
 - `physioatlas/tracking.py`
 - `physioatlas/static/research_hub/index.html`
 - `tests/physioatlas/test_research_hub.py`
@@ -94,6 +99,8 @@ The current local server exposes:
 - `GET /api/members`
 - `GET /api/modalities`
 - `GET /api/calibration`
+- `GET /api/reflector`
+- `GET /api/rf-fusion`
 - `GET /api/studies`
 - `GET /api/experiments`
 - `GET /api/events`
@@ -124,6 +131,13 @@ fixed-channel multi-link CSI. Display its `measurement_status`, `confidence`,
 `separation_condition_number`, covariance, and provenance. A calibrated zone
 position is not continuous pose. Never hide an unverified clock, single-band
 capture, ill-conditioned separation, or experimentally disabled heart rate.
+
+Implement `/calibration/reflector` exactly according to
+`REFLECTOR_FUSION_FRONTEND_SPEC.md`. The current API exposes reflector and
+fusion sections separately; keep that adapter and be ready to consume the
+optional additive `reflector_fusion` projection when introduced. Never animate
+unreported reflector motion, never render an occupant for an abstained fusion
+decision, and never present a queued calibration action as physical movement.
 
 ## Claim and display rules
 

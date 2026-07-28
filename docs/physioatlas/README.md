@@ -58,6 +58,17 @@ masked RF pretraining   complex multi-link model   propagation graph   RF field 
   and open-set identity for explicitly enrolled members.
 - Five executable priority studies, rolling live track histories, per-modality
   calibration, a local household Research Hub, and safe queued actions.
+- Strict decoded-BFI ingestion, empty-room normalization, BFI zone prototypes,
+  selective CSI/BFI evidence fusion, and executable modality ablations.
+- A safety-gated motorized-reflector simulator, telemetry health analysis,
+  motor-off RF waypoint atlas, and daily transfer-drift comparison.
+
+The implementation and study/UI contracts are:
+
+- [DUAL_BAND_HOUSEHOLD_CSI_PLAN.md](DUAL_BAND_HOUSEHOLD_CSI_PLAN.md)
+- [CSI_BFI_FUSION_STUDY.md](CSI_BFI_FUSION_STUDY.md)
+- [REFLECTOR_FUSION_FRONTEND_SPEC.md](REFLECTOR_FUSION_FRONTEND_SPEC.md)
+- [RF_FUSION_REFLECTOR_RUNBOOK.md](RF_FUSION_REFLECTOR_RUNBOOK.md)
 
 ## One-command verification
 
