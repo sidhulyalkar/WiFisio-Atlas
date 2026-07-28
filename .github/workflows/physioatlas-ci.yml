@@ -1,0 +1,104 @@
+name: PhysioAtlas CI
+
+"on":
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'physioatlas/**'
+      - 'tests/physioatlas/**'
+      - 'configs/physioatlas/**'
+      - 'docs/physioatlas/**'
+      - 'scripts/innerloop-*'
+      - 'requirements-physioatlas.txt'
+      - 'INNERLOOP.md'
+      - 'PROJECT_GOALS_PHYSIOATLAS.md'
+      - 'pyproject.toml'
+      - 'Makefile'
+      - '.github/workflows/physioatlas-ci.yml'
+  pull_request:
+    paths:
+      - 'physioatlas/**'
+      - 'tests/physioatlas/**'
+      - 'configs/physioatlas/**'
+      - 'docs/physioatlas/**'
+      - 'scripts/innerloop-*'
+      - 'requirements-physioatlas.txt'
+      - 'INNERLOOP.md'
+      - 'PROJECT_GOALS_PHYSIOATLAS.md'
+      - 'pyproject.toml'
+      - 'Makefile'
+      - '.github/workflows/physioatlas-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: physioatlas-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  research-infrastructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements-physioatlas.txt
+
+      - name: Install minimal PhysioAtlas environment
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install -r requirements-physioatlas.txt
+          python -m pip install -e . --no-deps --no-build-isolation
+
+      - name: Compile and discover adapters
+        run: |
+          python -m compileall -q physioatlas
+          python -m physioatlas list-adapters
+
+      - name: Environment doctor
+        run: python -m physioatlas doctor --repo .
+
+      - name: Unit and contract tests
+        run: python -m pytest -o addopts='' tests/physioatlas -q
+
+      - name: Deterministic end-to-end smoke experiment
+        run: |
+          python -m physioatlas smoke-test --output outputs/physioatlas/ci-smoke
+          python -m physioatlas verify-run outputs/physioatlas/ci-smoke/run
+
+      - name: Consent-first household research smoke suite
+        run: python -m physioatlas household-smoke-test --output outputs/physioatlas/household-smoke
+
+      - name: Household privacy fault injection
+        run: python -m physioatlas household-fault-test --output outputs/physioatlas/household-fault
+
+      - name: Fail-closed fault injection
+        run: python -m physioatlas fault-test --output outputs/physioatlas/fault-test
+
+      - name: Upload auditable smoke record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physioatlas-smoke-${{ github.run_id }}
+          path: |
+            outputs/physioatlas/ci-smoke/smoke-report.json
+            outputs/physioatlas/ci-smoke/run/experiment.json
+            outputs/physioatlas/ci-smoke/run/config.snapshot.yaml
+            outputs/physioatlas/ci-smoke/run/neural/run.json
+            outputs/physioatlas/ci-smoke/integrations/rf-pretraining/run.json
+            outputs/physioatlas/ci-smoke/integrations/calibration-profile.json
+            outputs/physioatlas/household-smoke/household-smoke-report.json
+            outputs/physioatlas/household-smoke/household-registry.json
+            outputs/physioatlas/household-smoke/research-hub-state.json
+            outputs/physioatlas/household-smoke/studies/priority-study-suite.json
+            outputs/physioatlas/household-fault/household-fault-report.json
+            outputs/physioatlas/fault-test/fault-report.json
+          if-no-files-found: warn

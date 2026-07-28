@@ -1,0 +1,2 @@
+{"timestamp_s":0.0,"position_m":[1.2,0.8],"embeddings":{"wifi_csi":[1.0,0.0,0.0,0.0]},"signal_quality":0.92,"observability":0.88,"respiratory_rate_bpm":14.2,"heart_rate_bpm":68.1,"motion_index":0.04}
+{"timestamp_s":0.0,"position_m":[3.0,1.1],"embeddings":{"wifi_csi":[0.0,1.0,0.0,0.0]},"signal_quality":0.89,"observability":0.84,"respiratory_rate_bpm":16.0,"heart_rate_bpm":75.4,"motion_index":0.07}

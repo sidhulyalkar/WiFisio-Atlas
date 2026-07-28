@@ -176,6 +176,7 @@ Changelog = "https://github.com/ruvnet/wifi-densepose/blob/main/CHANGELOG.md"
 [project.scripts]
 wifi-densepose = "src.cli:cli"
 wdp = "src.cli:cli"
+physioatlas = "physioatlas.cli:main"
 
 [project.entry-points."wifi_densepose.plugins"]
 # Plugin entry points for extensibility
@@ -185,7 +186,7 @@ package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["wifi_densepose*", "src*"]
+include = ["wifi_densepose*", "src*", "physioatlas*"]
 exclude = ["tests*", "docs*", "scripts*"]
 
 [tool.setuptools.package-data]
@@ -199,6 +200,7 @@ exclude = ["tests*", "docs*", "scripts*"]
 ]
 "src.models" = ["*.pth", "*.onnx", "*.pt"]
 "src.config" = ["*.yaml", "*.yml", "*.json"]
+"physioatlas" = ["static/*.html", "static/research_hub/*.html", "static/research_hub/*.js", "static/research_hub/*.css"]
 
 [tool.black]
 line-length = 88

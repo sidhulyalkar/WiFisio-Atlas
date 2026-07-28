@@ -1,0 +1,16 @@
+project: PhysioAtlas
+entrypoint: python -m physioatlas run-config
+baseline_config: configs/physioatlas/synthetic_ecg.yaml
+result_file: experiment.json
+checkpoint_result_file: neural/run.json
+required_invariants:
+  - research_only_is_true
+  - clinical_claim_allowed_is_false
+  - train_validation_subjects_disjoint
+  - checkpoint_sha256_present
+recommended_axes:
+  - training.use_auxiliary
+  - training.use_geometry
+  - training.hidden_dim
+  - data.window_seconds
+  - data.target

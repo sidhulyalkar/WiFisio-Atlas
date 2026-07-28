@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PhysioAtlas Research Monitor</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
+    body { margin: 0; background: #071015; color: #e8f4f2; }
+    main { max-width: 1100px; margin: 0 auto; padding: 32px; }
+    h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+    .guardrail { color: #ffd27a; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: #101d24; border: 1px solid #27404b; border-radius: 14px; padding: 18px; }
+    .label { color: #91b8b5; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .value { font-size: 1.25rem; margin-top: 8px; overflow-wrap: anywhere; }
+    pre { white-space: pre-wrap; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>PhysioAtlas Research Monitor</h1>
+  <div class="guardrail">Research-only signals. “Not observable” is a valid and preferred output.</div>
+  <section class="grid" id="cards"></section>
+  <section class="card" style="margin-top:16px"><div class="label">Raw state</div><pre id="raw"></pre></section>
+</main>
+<script>
+async function refresh() {
+  const response = await fetch('/api/state', {cache: 'no-store'});
+  const state = await response.json();
+  const cards = document.getElementById('cards');
+  cards.innerHTML = '';
+  const entries = [
+    ['Status', state.status ?? 'unknown'],
+    ['Session', state.session_id ?? 'none'],
+    ['Observability', state.observability ?? 'not reported'],
+    ['Uncertainty', state.uncertainty ?? 'not reported'],
+    ['Signal quality', state.signal_quality ?? 'not reported'],
+    ['Claim boundary', state.claim_boundary ?? 'research only']
+  ];
+  for (const [label, value] of entries) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="label">${label}</div><div class="value">${value}</div>`;
+    cards.appendChild(card);
+  }
+  document.getElementById('raw').textContent = JSON.stringify(state, null, 2);
+}
+refresh(); setInterval(refresh, 1000);
+</script>
+</body>
+</html>

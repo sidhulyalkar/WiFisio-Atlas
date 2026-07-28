@@ -1,0 +1,18 @@
+[
+  {
+    "candidate_id": "wifi-link-1-channel-36",
+    "predicted_information_gain": 0.44,
+    "observability_gain": 0.31,
+    "novelty": 0.12,
+    "energy_cost": 0.20,
+    "switch_cost": 0.05
+  },
+  {
+    "candidate_id": "wifi-link-2-channel-149",
+    "predicted_information_gain": 0.51,
+    "observability_gain": 0.40,
+    "novelty": 0.08,
+    "energy_cost": 0.24,
+    "switch_cost": 0.10
+  }
+]

@@ -1,0 +1,230 @@
+{
+  "configuration_and_ui": {
+    "bash_syntax": {
+      "scripts": 23,
+      "status": "passed"
+    },
+    "javascript": {
+      "runtime": "node",
+      "status": "passed"
+    },
+    "powershell_runtime": "not available in verification container",
+    "yaml": {
+      "count": 13,
+      "files": [
+        "configs/physioatlas/synthetic_ecg.yaml",
+        "configs/physioatlas/acquisition_synthetic.yaml",
+        "configs/physioatlas/synthetic_ecg_rf_only.yaml",
+        "configs/physioatlas/synthetic_environment_holdout.yaml",
+        "configs/physioatlas/household/study-organ_correlated_motion.yaml",
+        "configs/physioatlas/household/study-cardiac_mechanics.yaml",
+        "configs/physioatlas/household/study-respiration_sleep.yaml",
+        "configs/physioatlas/household/home-network.example.yaml",
+        "configs/physioatlas/household/study-mobility_gait.yaml",
+        "configs/physioatlas/household/study-pulse_propagation.yaml",
+        ".github/workflows/physioatlas-ci.yml",
+        "innerloop/physioatlas_household_research.yaml",
+        "innerloop/physioatlas_experiment.yaml"
+      ],
+      "status": "passed"
+    }
+  },
+  "deterministic_replay": {
+    "comparisons": {
+      "checkpoint_sha256": true,
+      "dataset_sha256": true,
+      "final_metrics": true,
+      "household_stable_payload": true,
+      "run_id": true
+    },
+    "status": "passed"
+  },
+  "doctor_ready": true,
+  "doctor_required_failures": 0,
+  "editable_install": {
+    "command": "python -m pip install -e . --no-deps --no-build-isolation",
+    "passed": true
+  },
+  "faults": {
+    "household": [
+      {
+        "detected": true,
+        "name": "revoked_identity_consent"
+      },
+      {
+        "detected": true,
+        "name": "out_of_distribution_identity"
+      },
+      {
+        "detected": true,
+        "name": "unsafe_dashboard_action"
+      }
+    ],
+    "standard": [
+      {
+        "detected": true,
+        "name": "checkpoint_corruption"
+      },
+      {
+        "detected": true,
+        "name": "non_monotonic_timestamps"
+      },
+      {
+        "detected": true,
+        "name": "expired_consent"
+      },
+      {
+        "detected": true,
+        "name": "excessive_clock_drift"
+      },
+      {
+        "detected": true,
+        "name": "invalid_rf_representation"
+      },
+      {
+        "detected": true,
+        "name": "audit_log_tamper"
+      },
+      {
+        "detected": true,
+        "name": "calibration_profile_tamper"
+      },
+      {
+        "detected": true,
+        "name": "invalid_active_sensing_candidates"
+      }
+    ]
+  },
+  "household_determinism": {
+    "household_deterministic": true,
+    "status": "passed",
+    "study_infrastructure_valid": {
+      "cardiac_mechanics": true,
+      "mobility_gait": true,
+      "organ_correlated_motion": true,
+      "pulse_propagation": true,
+      "respiration_sleep": true
+    },
+    "study_scientific_gates": {
+      "cardiac_mechanics": "passed",
+      "mobility_gait": "not_evaluable",
+      "organ_correlated_motion": "passed",
+      "pulse_propagation": "passed",
+      "respiration_sleep": "passed"
+    }
+  },
+  "household_smoke": {
+    "accepted_accuracy": 1.0,
+    "checks": {
+      "all_members_enrolled": true,
+      "all_priority_studies_executed": true,
+      "all_priority_studies_valid": true,
+      "identity_accuracy_at_least_80pct": true,
+      "identity_evaluation_valid": true,
+      "identity_split_disjoint": true,
+      "live_tracks_identified": true,
+      "registry_ready": true,
+      "research_hub_state_exists": true,
+      "unknown_remained_anonymous": true
+    },
+    "coverage": 1.0,
+    "held_out_sessions": 4,
+    "members_enrolled": 4,
+    "split_is_disjoint": true,
+    "status": "passed",
+    "synthetic_only": true,
+    "unknown_remained_anonymous": true
+  },
+  "limitations": [
+    "No physical home CSI, mmWave, ECG, PPG, respiratory belt, depth, ultrasound, or human-participant data was available.",
+    "Synthetic household identity texture verifies software, not real family-member distinguishability.",
+    "Ordinary router RSSI or MAC telemetry is not a substitute for full CSI.",
+    "Raw single-link CSI does not by itself assign mixed physiology to individual people; an upstream localization or separation source is required.",
+    "Mobility/gait remains scientifically not evaluable without an independent gait or motion reference.",
+    "No diagnosis, emergency response, blood-pressure, direct organ-imaging, or clinical-utility claim is supported."
+  ],
+  "operational_surfaces": {
+    "hub_http": {
+      "health": {
+        "local_only": true,
+        "research_only": true,
+        "status": "ok"
+      },
+      "members": 4,
+      "status": "passed",
+      "tracks": 13
+    },
+    "udp_loopback": "passed in tests/physioatlas/test_household_operational.py",
+    "workspace_and_jsonl": {
+      "draft_consents_checked": 2,
+      "replay_anonymous": 2,
+      "replay_tracks": 2,
+      "replay_valid": true,
+      "status": "passed"
+    }
+  },
+  "physioatlas_tests": {
+    "failed": 0,
+    "passed": 49
+  },
+  "priority_studies": {
+    "cardiac_mechanics": {
+      "claim_boundary": "Mechanical cardiac timing research; not arrhythmia diagnosis.",
+      "infrastructure_valid": true,
+      "scientific_gate": "passed",
+      "sessions_analyzed": 16
+    },
+    "mobility_gait": {
+      "claim_boundary": "Mobility research; not fall-risk or frailty diagnosis.",
+      "infrastructure_valid": true,
+      "scientific_gate": "not_evaluable",
+      "sessions_analyzed": 16
+    },
+    "organ_correlated_motion": {
+      "claim_boundary": "Regional motion correlation only; no organ image or pathology claim.",
+      "infrastructure_valid": true,
+      "scientific_gate": "passed",
+      "sessions_analyzed": 16
+    },
+    "pulse_propagation": {
+      "claim_boundary": "Pulse-arrival timing research; not blood-pressure measurement.",
+      "infrastructure_valid": true,
+      "scientific_gate": "passed",
+      "sessions_analyzed": 16
+    },
+    "respiration_sleep": {
+      "claim_boundary": "Respiratory mechanics research; not sleep-apnea diagnosis.",
+      "infrastructure_valid": true,
+      "scientific_gate": "passed",
+      "sessions_analyzed": 16
+    }
+  },
+  "public_cli_commands": 39,
+  "release": "0.4.0",
+  "research_only": true,
+  "rust_verification": {
+    "prior_v0.3_report": "reported 34 inherited Cargo invariant tests passed; not counted as v0.4 execution evidence",
+    "reason": "cargo executable was unavailable in the v0.4 verification container",
+    "source_boundary": "v0.4 changes are confined to Python, configs, UI, tests, scripts, and documentation",
+    "status": "not_run"
+  },
+  "schema_version": "physioatlas.release-verification.v2",
+  "standard_smoke": {
+    "checkpoint_sha256": "4e6f414b3dcbd020f8632ff2e7fc2f3baf793d9a8f9ae46c5dca63e3668f2867",
+    "dataset_sha256": "d725e195f93c7dc62ea001c8ea9e2f1ea93f18bbc8354e78b52c6a1339dd6da6",
+    "final_metrics": {
+      "correlation": 0.6827366970783811,
+      "epoch": 1,
+      "interval_90_coverage": 1.0,
+      "mae": 0.621959924697876,
+      "mean_observability": 0.5615028142929077,
+      "mean_predicted_std": 0.8858128786087036,
+      "observability_brier": 0.19295098270742075,
+      "rmse": 0.6972600817680359,
+      "train_loss": 0.3538632392883301
+    },
+    "run_id": "40a8315870421c14",
+    "run_valid": true,
+    "status": "passed"
+  }
+}

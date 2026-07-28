@@ -1,4 +1,14 @@
 # Changelog
+## PhysioAtlas v0.4.0 household research extension
+
+- Added consent-first household enrollment and anonymous-first open-set tracking.
+- Added five executable physiological study targets and held-out identity gates.
+- Added a local Research Hub, live JSONL/UDP bridges, rolling calibration views,
+  safe actions, InnerLoop/Gemini integration, and privacy fault testing.
+- Synthetic household separability remains software verification only; real
+  family distinguishability and physiological accuracy require compatible CSI
+  hardware, independent references, and held-out physical studies.
+
 
 All notable changes to this project will be documented in this file.
 

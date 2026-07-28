@@ -11,6 +11,51 @@
   </a>
 </p>
 
+## PhysioAtlas research extension
+
+This fork adds **PhysioAtlas v0.4**, a research-only, consent-first platform for
+synchronized RF and physiological acquisition, household calibration, anonymous
+multi-person tracking, open-set enrolled identity, five executable research
+studies, and a local Research Hub for InnerLoop/Gemini iteration.
+
+The household workflow deliberately separates tracking from identity. Every
+person begins as an anonymous track; an alias is attached only after explicit
+enrollment, valid consent, repeated observations, sufficient signal quality,
+and a calibrated open-set margin. Visitors and ambiguous observations remain
+`unknown-track-*`.
+
+The release includes:
+
+- RuView/NPZ/JSONL/live-UDP acquisition bridges
+- clock and geometry calibration
+- complex multi-link RF learning and masked pretraining
+- respiration, cardiac mechanics, pulse propagation, mobility/gait, and
+  ultrasound-supervised regional-motion studies
+- per-member and per-modality calibration metrics
+- rolling live physiology, motion, quality, and observability traces
+- consent, pseudonymization, audit, null-control, leakage, and fault gates
+- a dependency-light local Research Hub and safe action worker
+
+It does **not** establish that ordinary router traffic identifies people, that
+real family members are RF-separable, that WiFi images internal organs, or that
+any output is clinically validated. Full CSI normally requires compatible ESP32
+nodes or research hardware, and multiple simultaneous people require an upstream
+localization/separation source.
+
+Start with:
+
+- [`docs/physioatlas/HOUSEHOLD_PILOT_RUNBOOK.md`](docs/physioatlas/HOUSEHOLD_PILOT_RUNBOOK.md)
+- [`docs/physioatlas/HOUSEHOLD_RESEARCH.md`](docs/physioatlas/HOUSEHOLD_RESEARCH.md)
+- [`docs/physioatlas/PRIORITY_STUDIES.md`](docs/physioatlas/PRIORITY_STUDIES.md)
+- [`docs/physioatlas/RESEARCH_HUB.md`](docs/physioatlas/RESEARCH_HUB.md)
+- [`INNERLOOP_GEMINI_RESEARCH_HUB_TASK.md`](INNERLOOP_GEMINI_RESEARCH_HUB_TASK.md)
+
+```bash
+python -m pip install -r requirements-physioatlas.txt
+python -m pip install -e . --no-deps --no-build-isolation
+bash scripts/household-research-bootstrap.sh
+```
+
 ## **See through walls with WiFi** ##
 
 **Turn ordinary WiFi into a spatial intelligence / sensing system.** Detect people, measure breathing and heart rate, track movement, and monitor rooms — through walls, in the dark, with no cameras or wearables. Just physics.

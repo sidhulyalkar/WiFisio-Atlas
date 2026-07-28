@@ -1,0 +1,11 @@
+schema_version: physioatlas.study-protocol.v1
+study_id: household-mobility_gait-pilot
+target: mobility_gait
+dataset_root: data/physioatlas/household/sessions
+output_dir: outputs/physioatlas/studies/mobility_gait
+sample_rate_hz: 20.0
+minimum_sessions: 4
+require_reference: true
+environment_holdout: true
+research_only: true
+notes: Replace the dataset path after collecting synchronized, consented sessions.

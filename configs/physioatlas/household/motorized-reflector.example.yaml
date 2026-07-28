@@ -1,0 +1,57 @@
+identity:
+  device_id: reflector-simulator-01
+  hardware_revision: simulation-v1
+  firmware_version: simulation-v1
+  driver_name: deterministic-simulator
+  telemetry_clock_id: host-monotonic-sim
+
+installation:
+  environment_id: living-room-v1
+  origin_m: [1.0, 2.0, 0.8]
+  axis_unit_vector: [1.0, 0.0, 0.0]
+  motion_unit: degrees
+  home_position: 0.0
+  reflector_diameter_m: 0.2
+  reflector_material: synthetic-reference
+
+safety_limits:
+  minimum_position: -30.0
+  maximum_position: 30.0
+  maximum_velocity_per_s: 80.0
+  maximum_acceleration_per_s2: 300.0
+  maximum_motor_current_a: 1.5
+  fail_closed: true
+  require_estop_input: true
+
+trajectory:
+  plan_id: cross-band-transfer-sweep-v1
+  sample_rate_hz: 50.0
+  research_only: true
+  segments:
+    - kind: dwell
+      duration_s: 2.0
+      target_position: 0.0
+    - kind: sinusoid
+      duration_s: 6.0
+      repeats: 3
+      center_position: 0.0
+      amplitude: 10.0
+      cycles: 1.0
+    - kind: home
+      duration_s: 2.0
+
+simulation:
+  response_lag_s: 0.12
+  tracking_bias: 0.0
+  noise_standard_deviation: 0.02
+  idle_current_a: 0.08
+  error_current_gain: 0.015
+  seed: 17
+
+health_thresholds:
+  maximum_lag_s: 0.3
+  maximum_rmse: 0.5
+  maximum_absolute_error: 1.5
+  maximum_repeatability_rmse: 0.25
+  minimum_command_range: 5.0
+  minimum_samples: 100

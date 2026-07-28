@@ -1,0 +1,50 @@
+{
+  "checkpoint_sha256": "545d5856e8bacf88a7474f9f1df73c172ad63628e94dc434abd22e3d021f5d90",
+  "dataset_sha256": "87f0b284ef2c09b91a9360712267498647d97d470c51f5a31be6846e27b57bd2",
+  "deterministic_replay": true,
+  "doctor_ready": true,
+  "doctor_required_failures": 0,
+  "editable_install": {
+    "command": "python -m pip install -e . --no-deps --no-build-isolation",
+    "passed": true
+  },
+  "fault_test_status": "passed",
+  "faults_detected": [
+    "checkpoint_corruption",
+    "non_monotonic_timestamps",
+    "expired_consent",
+    "excessive_clock_drift",
+    "invalid_rf_representation",
+    "audit_log_tamper",
+    "calibration_profile_tamper",
+    "invalid_active_sensing_candidates"
+  ],
+  "inherited_cargo_invariant_tests": {
+    "failed": 0,
+    "passed": 34
+  },
+  "integrations_valid": true,
+  "limitations": [
+    "No physical RF, mmWave, ECG, PPG, respiratory, ultrasound, or human-participant hardware was available for validation.",
+    "Synthetic performance is software verification only.",
+    "The CIR path is an IFFT baseline and does not exceed bandwidth-limited resolution.",
+    "Federated aggregation is a local simulator, not cryptographic secure aggregation.",
+    "No diagnostic, clinical, blood-pressure, or organ-imaging claim is supported."
+  ],
+  "physioatlas_tests": {
+    "failed": 0,
+    "passed": 38
+  },
+  "public_cli_commands": 23,
+  "release": "0.3.0",
+  "research_only": true,
+  "rf_pretraining_checkpoint_sha256": "86bb9dbd2143218ec3bc357fe107c6a3ebb1f8aa0901e94a03984e04188c001e",
+  "run_id": "2e1ce286e0757a49",
+  "run_verification_valid": true,
+  "schema_version": "physioatlas.release-verification.v1",
+  "shell_syntax": {
+    "bash": true,
+    "powershell_runtime": "not available in verification container"
+  },
+  "smoke_status": "passed"
+}

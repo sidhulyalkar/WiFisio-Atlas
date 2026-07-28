@@ -1,0 +1,41 @@
+schema_version: physioatlas.household-live.v1
+research_only: true
+household_workspace: data/physioatlas/household
+registry_path: data/physioatlas/household/household-registry.json
+research_hub_state: outputs/physioatlas/research-hub-state.json
+privacy:
+  local_only: true
+  require_explicit_enrollment: true
+  unknown_people_anonymous: true
+  store_raw_identity_embeddings: false
+capture:
+  # A normal router usually exposes RSSI, not full CSI. Use RuView-compatible
+  # ESP32/research-NIC hardware for the RF experiments.
+  ruview_csi_udp: 5005
+  localized_observation_udp: 8790
+  sample_rate_hz: 20
+  minimum_links: 4
+calibration:
+  minimum_sessions_per_member: 3
+  required_protocols:
+    - quiet_seated
+    - quiet_supine
+    - paced_breathing
+    - speaking_and_small_motion
+    - room_reentry
+  negative_controls:
+    - empty_room
+    - fan_or_moving_curtain
+    - wrong_geometry_replay
+    - consented_unknown_guest
+identity:
+  mode: open_set_enrolled_household_only
+  minimum_modalities: 1
+  minimum_observations_before_label: 4
+  abstain_on_ambiguity: true
+studies:
+  - respiration_sleep
+  - cardiac_mechanics
+  - pulse_propagation
+  - mobility_gait
+  - organ_correlated_motion

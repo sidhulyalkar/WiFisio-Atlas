@@ -1,0 +1,36 @@
+session_id: acquisition-synthetic-001
+subject_id: synthetic-acquisition-subject
+protocol: concurrent_adapter_smoke
+output_dir: outputs/physioatlas/acquisition-synthetic
+geometry_path: data/physioatlas/synthetic/subject-001/session-001/geometry.json
+duration_seconds: 5.0
+environment_id: synthetic-room-1
+posture: seated
+condition: quiet_rest
+consent_path: data/physioatlas/synthetic/subject-001/session-001/consent.json
+adapters:
+  - adapter_type: synthetic_wave
+    sensor_id: wifi-synthetic
+    modality: wifi_csi
+    output_name: wifi_csi.npz
+    sample_rate_hz: 20.0
+    clock_domain: wifi-clock
+    representation: features
+    parameters:
+      seed: 101
+      frequency_hz: 0.25
+      features: 8
+      noise: 0.01
+  - adapter_type: synthetic_wave
+    sensor_id: ppg-synthetic
+    modality: ppg
+    output_name: ppg.npz
+    sample_rate_hz: 20.0
+    clock_domain: reference-clock
+    representation: features
+    parameters:
+      seed: 102
+      frequency_hz: 1.1
+      features: 1
+      noise: 0.005
+targets: []
