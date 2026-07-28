@@ -85,6 +85,7 @@ export class NvSettingsDrawer extends LitElement {
       border-radius: 999px;
       cursor: pointer;
       flex-shrink: 0;
+      padding: 0;
     }
     .toggle::after {
       content: ''; position: absolute;
@@ -171,9 +172,10 @@ export class NvSettingsDrawer extends LitElement {
               <div class="lbl">Reduce motion</div>
               <div class="desc">Stops the rotating diamond, animated field lines, and chart easing. Auto-on if your system has the prefers-reduced-motion preference set.</div>
             </div>
-            <span class="toggle ${motionReduced.value ? 'on' : ''}"
+            <button class="toggle ${motionReduced.value ? 'on' : ''}"
+              type="button" aria-label="Reduce motion"
               role="switch" aria-checked=${motionReduced.value}
-              @click=${() => motionReduced.value = !motionReduced.value}></span>
+              @click=${() => motionReduced.value = !motionReduced.value}></button>
           </div>
         </div>
 
@@ -184,9 +186,10 @@ export class NvSettingsDrawer extends LitElement {
               <div class="lbl">Auto-rerun on edit</div>
               <div class="desc">When you change a Tunables slider or load a new scene, push the change to the worker without a manual restart.</div>
             </div>
-            <span class="toggle ${autoUpdate.value ? 'on' : ''}"
+            <button class="toggle ${autoUpdate.value ? 'on' : ''}"
+              type="button" aria-label="Auto-rerun on edit"
               role="switch" aria-checked=${autoUpdate.value}
-              @click=${() => autoUpdate.value = !autoUpdate.value}></span>
+              @click=${() => autoUpdate.value = !autoUpdate.value}></button>
           </div>
         </div>
 
