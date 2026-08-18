@@ -62,9 +62,17 @@ masked RF pretraining   complex multi-link model   propagation graph   RF field 
   selective CSI/BFI evidence fusion, and executable modality ablations.
 - A safety-gated motorized-reflector simulator, telemetry health analysis,
   motor-off RF waypoint atlas, and daily transfer-drift comparison.
+- A presentation-safe `physioatlas.persona.v1` contract that carries only
+  confidence/observability/provenance-aware derived evidence, never raw RF,
+  raw camera frames, or biometric templates.
+- A four-stage PSG sleep benchmark helper with patient-disjoint folds,
+  calibration, abstention coverage, stage-wise metrics, and probability-quality
+  metrics for evaluating future WiFi sleep models without reducing the result to
+  a single accuracy number.
 
 The implementation and study/UI contracts are:
 
+- [PHYSIO_PERSONA_FRAMEWORK.md](PHYSIO_PERSONA_FRAMEWORK.md)
 - [DUAL_BAND_HOUSEHOLD_CSI_PLAN.md](DUAL_BAND_HOUSEHOLD_CSI_PLAN.md)
 - [CSI_BFI_FUSION_STUDY.md](CSI_BFI_FUSION_STUDY.md)
 - [REFLECTOR_FUSION_FRONTEND_SPEC.md](REFLECTOR_FUSION_FRONTEND_SPEC.md)
@@ -140,5 +148,8 @@ identity texture tests only the software and open-set gates.
   arrays. It does not segment organs or ingest proprietary scanner formats.
 - Federated aggregation is a local research simulator, not cryptographic secure
   aggregation.
+- The current `respiration_sleep` study is a respiratory-mechanics baseline. It
+  is not a validated sleep-staging model; sleep-stage claims require synchronized
+  PSG and held-out human evaluation.
 - No physical device, human participant, diagnostic endpoint, or clinical
   efficacy was validated in the packaged software environment.
